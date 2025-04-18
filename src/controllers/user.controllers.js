@@ -246,24 +246,26 @@ return res
 })
 
 
-const updateAccountDetails=asyncHandler(async(req,res)=>{
-    const {fullname,email,username}=req.body
-  if(!fullname||!email){
-      throw new ApiError(400,"all fields are required")
-  }
-  const user=User.findByIdAndUpdate(req.user._id,
-    {
-    $set:{
-        fullname,
-        email:email,
-     }
-  },
-     {new:true}
-).select("-password ")
-return res
-.status(200)
-.json(new ApiResponse(200,user,"account details updated successfully"))
-})
+const updateAccountDetails = asyncHandler(async (req, res) => {
+    const { fullname, email } = req.body;
+    if (!fullname || !email) {
+        throw new ApiError(400, "All fields are required");
+    }
+    const user = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            $set: {
+                fullname,
+                email,
+            },
+        },
+        { new: true }
+    ).select("-password");
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, user, "Account details updated successfully"));
+});
 
 
 const updateUserAvatar=asyncHandler(async(req,res)=>{
